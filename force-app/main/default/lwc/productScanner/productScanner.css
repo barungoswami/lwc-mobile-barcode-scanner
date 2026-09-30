@@ -1,0 +1,22 @@
+:host {
+    display: block;
+}
+
+.scanner-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--lwc-spacingLarge, 1.5rem) 0;
+}
+
+.scan-btn {
+    display: block;
+    width: 100%;
+}
+
+.result-card {
+    background: var(--lwc-colorBackgroundAlt, #f3f3f3);
+    border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+    padding: var(--lwc-spacingMedium, 1rem);
+    border-inline-start: 4px solid var(--lwc-colorBorderSuccess, #2e7d32);
+}

@@ -1,0 +1,134 @@
+<template>
+    <lightning-card title="Product Scanner" icon-name="utility:scan">
+        <div class="slds-var-p-around_medium">
+
+            <!-- Not available on this surface -->
+            <template if:true={scannerUnavailable}>
+                <div class="slds-notify slds-notify_alert slds-theme_warning slds-var-m-bottom_medium" role="alert">
+                    <span class="slds-assistive-text">Warning</span>
+                    <lightning-icon
+                        icon-name="utility:warning"
+                        alternative-text="Warning"
+                        size="x-small"
+                        class="slds-var-m-right_x-small">
+                    </lightning-icon>
+                    Barcode scanning is only available in the Salesforce Mobile App or Field Service Mobile.
+                </div>
+            </template>
+            <template if:false={scannerUnavailable}>
+
+                <!-- Ready to scan -->
+                <template if:true={isIdle}>
+                    <div class="scanner-prompt slds-var-m-bottom_medium">
+                        <lightning-icon
+                            icon-name="utility:product_workspace"
+                            size="large"
+                            class="slds-var-m-bottom_small">
+                        </lightning-icon>
+                        <p class="slds-text-body_regular slds-text-align_center">
+                            Tap <strong>Scan Barcode</strong> to identify a product.
+                        </p>
+                    </div>
+                    <div class="slds-grid slds-gutters slds-grid_align-center">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-button
+                                label="Scan Barcode"
+                                variant="brand"
+                                icon-name="utility:scan"
+                                class="scan-btn"
+                                onclick={handleScan}>
+                            </lightning-button>
+                        </div>
+                    </div>
+                </template>
+                <template if:false={isIdle}>
+
+                    <!-- Scanning in progress -->
+                    <template if:true={isScanning}>
+                        <div class="slds-align_absolute-center slds-var-p-around_large">
+                            <lightning-spinner
+                                alternative-text="Scanning…"
+                                size="medium">
+                            </lightning-spinner>
+                            <p class="slds-text-body_small slds-var-m-top_medium">Scanning…</p>
+                        </div>
+                    </template>
+                    <template if:false={isScanning}>
+
+                        <!-- Scan result -->
+                        <template if:true={hasResult}>
+                            <div class="result-card slds-var-m-bottom_medium">
+                                <div class="slds-media slds-media_center">
+                                    <div class="slds-media__figure">
+                                        <lightning-icon
+                                            icon-name="utility:check"
+                                            variant="success"
+                                            size="medium">
+                                        </lightning-icon>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <h3 class="slds-text-heading_small">Scan Successful</h3>
+                                        <dl class="slds-dl_horizontal slds-var-m-top_x-small">
+                                            <dt class="slds-dl_horizontal__label slds-text-color_weak">Value</dt>
+                                            <dd class="slds-dl_horizontal__detail">{scannedValue}</dd>
+                                            <dt class="slds-dl_horizontal__label slds-text-color_weak slds-var-m-top_x-small">Type</dt>
+                                            <dd class="slds-dl_horizontal__detail slds-var-m-top_x-small">{scannedType}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-gutters slds-grid_align-center">
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                    <lightning-button
+                                        label="Scan Again"
+                                        variant="brand"
+                                        icon-name="utility:refresh"
+                                        class="scan-btn"
+                                        onclick={handleScan}>
+                                    </lightning-button>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_1-of-4">
+                                    <lightning-button
+                                        label="Clear"
+                                        variant="neutral"
+                                        onclick={handleClear}>
+                                    </lightning-button>
+                                </div>
+                            </div>
+                        </template>
+                        <template if:false={hasResult}>
+
+                            <!-- Error state -->
+                            <template if:true={hasError}>
+                                <div class="slds-notify slds-notify_alert slds-theme_error slds-var-m-bottom_medium" role="alert">
+                                    <span class="slds-assistive-text">Error</span>
+                                    <lightning-icon
+                                        icon-name="utility:error"
+                                        alternative-text="Error"
+                                        size="x-small"
+                                        variant="inverse"
+                                        class="slds-var-m-right_x-small">
+                                    </lightning-icon>
+                                    {errorMessage}
+                                </div>
+                                <div class="slds-grid slds-grid_align-center">
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <lightning-button
+                                            label="Try Again"
+                                            variant="brand"
+                                            icon-name="utility:scan"
+                                            class="scan-btn"
+                                            onclick={handleScan}>
+                                        </lightning-button>
+                                    </div>
+                                </div>
+                            </template>
+
+                        </template>
+                    </template>
+                </template>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
